@@ -268,8 +268,8 @@ function dealChunk(financeData) {
 }
 
 function insertData(item) {
-  let sql = "INSERT INTO `finance_data` (`stock`,`stock_name`, `date`,`tbzzcsyl`,`jyhdcsdxjllje`,`gdzc`,`fzhj`,`yysr`,`gdqyhj`,`jlr`,`capital_stock`,`fpzfdxj`,`is_fenhong`,`fhje`,`stock_price`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
-  param = [item.stock, item.stock_name, item.date, item.tbzzcsyl, item.jyhdcsdxjllje, item.gdzc, item.fzhj, item.yysruse, item.gdqyhj, item.jlr, item.capital_stock, item.fpzfdxj, item.is_fenhong, item.fhje, item.stock_price]
+  let sql = "INSERT INTO `finance_data` (`stock`,`stock_name`, `date`,`tbzzcsyl`,`jyhdcsdxjllje`,`gdzc`,`fzhj`,`yysr`,`gdqyhj`,`jlr`,`capital_stock`,`fpzfdxj`,`is_fenhong`,`fhje`,`stock_price`,`stock_type`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+  param = [item.stock, item.stock_name, item.date, item.tbzzcsyl, item.jyhdcsdxjllje, item.gdzc, item.fzhj, item.yysruse, item.gdqyhj, item.jlr, item.capital_stock, item.fpzfdxj, item.is_fenhong, item.fhje, item.stock_price,item.stock_type]
   connection.query(sql, param, function (error, results, fields) {
     if (error) throw error;
     console.log(`》》》${item.stock_name}数据获取成功！《《《`)

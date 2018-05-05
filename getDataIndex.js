@@ -3,10 +3,9 @@ function beginEntrance() {
   let StockTimer = setInterval(() => {
     let needGetStock = [].concat(stock_array_nomarl, stock_array_st)
     needGetStock = Array.from(new Set(needGetStock))
-    needGetStock = ('0'.repeat(6) + needGetStock.toString()).trim().substr(-6)
     let nextGetStock = needGetStock.shift()
     if (nextGetStock) {
-      needGetStock = needGetStock.toString().trim()
+      nextGetStock = ('0'.repeat(6) + nextGetStock.toString()).trim().substr(-6)
       if (needGetStock.length > stock_array_st.length) {
         getStockfinanceData.begin(nextGetStock, 1)
       } else {
@@ -16,7 +15,7 @@ function beginEntrance() {
       console.log('》》》》》数据获取完毕《《《《《《')
       clearInterval(StockTimer)
     }
-  }, 10000)
+  }, 15000)
 }
 // 入口函数
 beginEntrance()
