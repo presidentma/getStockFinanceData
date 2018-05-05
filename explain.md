@@ -20,7 +20,9 @@ fpzfdxj 分配股利、利润或偿付利息支付亿
 http://emweb.securities.eastmoney.com/PC_HSF10/BonusFinancing/BonusFinancingAjax?code=sz000725
 fhze 分红金额
 千分位转数字直接 .replace(/,/gi,'')
-
+###获取月股价
+http://pdfm.eastmoney.com/EM_UBG_PDTI_Fast/api/js?rtntype=5&token=4f1862fc3b5e77c150a2b985b12db0fd&cb=jQuery183013334804466231853_1525516719453&id=0007252&type=mk&authorityType=&_=1525516776518
+`id=股票代码+'2'`
 
 指标详解
 资产净利率x1	资产净利润率=净利润/资产平均总额×100%	15.11%			
