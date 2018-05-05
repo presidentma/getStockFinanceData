@@ -9,7 +9,7 @@ function beginEntrance() {
       needGetStock = needGetStock.toString().trim()
       if (needGetStock.length > stock_array_st.length) {
         getStockfinanceData.begin(nextGetStock, 1)
-      } elseif(needGetStock.length <= stock_array_st.length) {
+      } else {
         getStockfinanceData.begin(nextGetStock, 2)
       }
     } else {
