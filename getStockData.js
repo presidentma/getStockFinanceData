@@ -33,7 +33,7 @@ function reqZyzb(option) {
         let obj = JSON.parse(zyzb_data)
         let finance = obj.Result
         financeData = Array.from(finance)
-       // console.log('reqZyzb')
+        // console.log('reqZyzb')
         resolve()
       })
     })
@@ -56,7 +56,7 @@ function reqBbmx(option) {
         dealBbmx(zcfz, 1)
         dealBbmx(xjll, 2)
         dealBbmx(lr, 3)
-      //  console.log('reqBbmx')
+        //  console.log('reqBbmx')
         resolve()
       })
     })
@@ -77,7 +77,7 @@ function reqLrb(option) {
         let jlr = obj.Result.lr0
         let xjll = obj.Result.xjll0
         dealLrb(jlr)
-       // console.log('reqLrb')
+        // console.log('reqLrb')
         resolve()
       })
     })
@@ -129,7 +129,7 @@ function reqGbqk(option) {
             }
           }
         })
-       // console.log('reqGbqk')
+        // console.log('reqGbqk')
         resolve()
       })
     })
@@ -249,19 +249,24 @@ function dealMoney(item) {
 }
 
 function dealChunk(financeData) {
+
   return new Promise(function (resolve, reject) {
-    financeData.map((item, index) => {
-      item.stock = stockCode
-      item.stock_type=StockType
-      insertData(item)
-      //console.log('dealChunk')
-    })
+    if (financeData.length > 0) {
+      financeData.map((item, index) => {
+        item.stock = stockCode
+        item.stock_type = StockType
+        insertData(item)
+        //console.log('dealChunk')
+      })
+    } else {
+      console.log('》》》本次请求数据为空，将继续下一条《《《')
+    }
   })
 }
 
 function insertData(item) {
   let sql = "INSERT INTO `finance_data` (`stock`,`stock_name`, `date`,`tbzzcsyl`,`jyhdcsdxjllje`,`gdzc`,`fzhj`,`yysr`,`gdqyhj`,`jlr`,`capital_stock`,`fpzfdxj`,`is_fenhong`,`fhje`,`stock_price`,`stock_type`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
-  param = [item.stock, item.stock_name, item.date, item.tbzzcsyl, item.jyhdcsdxjllje, item.gdzc, item.fzhj, item.yysruse, item.gdqyhj, item.jlr, item.capital_stock, item.fpzfdxj, item.is_fenhong, item.fhje, item.stock_price,item.stock_type]
+  param = [item.stock, item.stock_name, item.date, item.tbzzcsyl, item.jyhdcsdxjllje, item.gdzc, item.fzhj, item.yysruse, item.gdqyhj, item.jlr, item.capital_stock, item.fpzfdxj, item.is_fenhong, item.fhje, item.stock_price, item.stock_type]
   connection.query(sql, param, function (error, results, fields) {
     if (error) throw error;
     console.log(`》》》${item.stock_name}数据获取成功！《《《`)
@@ -303,7 +308,7 @@ function getStockSprice(option) {
 /*
 @@ 获取上市公司财务数据,参数是股票代码 
  */
-function getStockfinanceData(Code, type,position) {
+function getStockfinanceData(Code, type, position) {
   stockCode = Code
   StockType = type
   // 请求参数
