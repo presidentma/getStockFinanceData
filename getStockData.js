@@ -252,15 +252,7 @@ function dealChunk(financeData) {
   return new Promise(function (resolve, reject) {
     financeData.map((item, index) => {
       item.stock = stockCode
-      switch (StockType) {
-        case 1:
-          item.stock_type = 1
-        case 2:
-          item.stock_type = 2
-          break
-        default:
-          item.stock_type = 0
-      }
+      item.stock_type=StockType
       insertData(item)
       //console.log('dealChunk')
     })
@@ -340,7 +332,7 @@ function getStockfinanceData(Code, type,position) {
       rtntype: 5,
       token: '4f1862fc3b5e77c150a2b985b12db0fd',
       cb: 'jQuery183013334804466231853_1525516719453',
-      id: `${stockCode}2`,
+      id: `${stockCode}${position}`,
       type: 'mk',
       authorityType: '',
       _: '1525516776518'
