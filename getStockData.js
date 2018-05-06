@@ -311,7 +311,7 @@ function getStockSprice(option) {
 /*
 @@ 获取上市公司财务数据,参数是股票代码 
  */
-function getStockfinanceData(Code, type) {
+function getStockfinanceData(Code, type,position) {
   stockCode = Code
   StockType = type
   // 请求参数
