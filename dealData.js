@@ -29,9 +29,11 @@ zeta_score z分值
 
 connection.query('SELECT * FROM `finance_data_calculate`;', function (error, resoults, fields) {
   let put_data = []
+  let put_current_index = 0
   for (let i = 0; i < resoults.length; i++) {
     let id = resoults[i].id
     let stock_name = resoults[i].stock_name
+    let next_stock_name = returnNextName(i, resoults)
     let date = resoults[i].date.toLocaleDateString()
     let fhje = resoults[i].fhje // 分红金额
     let tbzzcsyl = resoults[i].tbzzcsyl // 净资产利润率
@@ -58,24 +60,26 @@ connection.query('SELECT * FROM `finance_data_calculate`;', function (error, res
       let z_score = -0.8751 + 6.3 * tbzzcsyl / 100 + 0.761 * jyhdcsdxjllje / capital_stock
         + 1.295 * Math.log(gdzc) / Math.LN10 + 0.412 * (yysr_current / yysr_before) + 0.015 * ((jlr - fhje) / jlr) + 0.105 * (fzhj / (capital_stock * stock_price))
         - 21.164 * (gdqyhj / capital_stock / stock_price)
-        let current_index = 0
+
       if (z_score) {
-        let fields_list = ['first_year','second_year','third_year','four_year','fifth_year','sixth_year','seventh_year','eighth_year','ninth_year','ten_year']
-        let put_sql = `INSERT INTO z_score_year (stock_type,${fields_list[current_index]}) VALUES (?,?);`
-        put_param = [resoults[i].stock_type, z_score]
-        if (stock_name == resoults[i + 1].stock_name) {
-          connection.query(put_sql, put_param, function (error, resoults, fields) {
-            if (error) throw error;
-            console.log(`>>> 插入${stock_name}第${current_index}年Z值成功${z_score}  <<<`)
-          })
-          current_index+=1
-        } else {
-          connection.query(put_sql, put_param, function (error, resoults, fields) {
-            if (error) throw error;
-            console.log(`>>> 插入${stock_name}第${current_index}年Z值成功${z_score}  <<<`)
-          })
-          current_index = 0
-        }
+        let put_sql
+        let put_param
+        let fields_list = ['first_year', 'second_year', 'third_year', 'four_year', 'fifth_year', 'sixth_year', 'seventh_year', 'eighth_year', 'ninth_year', 'ten_year']
+          put_sql = `INSERT INTO z_score_year (stock_type,${fields_list[put_current_index]}) VALUES (?,?);`
+          put_param = [resoults[i].stock_type, z_score]
+          if (stock_name == next_stock_name) {
+            connection.query(put_sql, put_param, function (error, response, fields) {
+              if (error) throw error;
+              console.log(`>>> 插入${stock_name}第${put_current_index+1}年Z值成功${z_score}  <<<`)
+            })
+            put_current_index += 1
+          } else {
+            connection.query(put_sql, put_param, function (error, response, fields) {
+              if (error) throw error;
+              console.log(`>>> 插入${stock_name}第${put_current_index+1}年Z值成功${z_score}  <<<`)
+            })
+            put_current_index = 0
+          }
         let sql = "UPDATE `finance_data_calculate` SET zeta_score=? WHERE id = ?;"
         let param = [z_score, id]
         connection.query(sql, param, function (error, resoults, fields) {
@@ -86,6 +90,19 @@ connection.query('SELECT * FROM `finance_data_calculate`;', function (error, res
         console.log('本条Z值计算错误')
       }
     }
+    if (i == resoults.length - 1) {
+      console.log(`计算完毕，共计算${resoults.length}条数据的Z值`)
+    }
   }
-  console.log(`计算完毕，共计算${resoults.length}条数据的Z值`)
 })
+
+function returnNextName(currentIndex, resoults) {
+  let current_name = resoults[currentIndex].stock_name
+  let current_item
+  for (j = 1; j < resoults.length - currentIndex - 1; j++) {
+    current_item = resoults[currentIndex + j]
+    if (current_item.fhje && current_item.tbzzcsyl && current_item.jyhdcsdxjllje && current_item.capital_stock && current_item.gdzc && current_item.jlr && current_item.fzhj && current_item.gdqyhj && current_item.yysr && current_item.stock_price) {
+      return current_item.stock_name
+    }
+  }
+}

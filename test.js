@@ -63,3 +63,16 @@ function beginEntrance() {
 }
 // 入口函数
 beginEntrance()
+
+
+if (put_current_index == 0) {
+  put_sql = `INSERT INTO z_score_year (stock_type,${fields_list[put_current_index]}) VALUES (?,?);`
+  put_param = [resoults[i].stock_type, z_score]
+} else {
+  connection.query("SELECT * FROM z_score_year ORDER BY id DESC LIMIT 1", function (error, res, fields) {
+    if (error) throw error;
+    console.log(res)
+    put_sql = `UPDATE z_score_year SET ${fields_list[put_current_index]}=? WHERE id = ?;`
+    put_param = [res.id, z_score]
+  })
+}
