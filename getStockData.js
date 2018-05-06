@@ -15,9 +15,6 @@ const connection = mysql.createConnection({
 })
 
 connection.connect()
-connection.query('SELECT COUNT(*) FROM `t_vpn_ip`;', function (error, results, fields) {
-  if (error) throw error;
-})
 let stockCode
 let StockType
 let financeData = []
