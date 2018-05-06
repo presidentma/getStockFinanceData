@@ -28,6 +28,7 @@ zeta_score z分值
 */
 
 connection.query('SELECT * FROM `finance_data_calculate`;', function (error, resoults, fields) {
+  let put_data = []
   for (let i = 0; i < resoults.length; i++) {
     let id = resoults[i].id
     let stock_name = resoults[i].stock_name
@@ -55,11 +56,28 @@ connection.query('SELECT * FROM `finance_data_calculate`;', function (error, res
       yysr_before = parseFloat(resoults[i + 1].yysr) // 上期营业收入
       stock_price = parseInt(stock_price) // 股价
       let z_score = -0.8751 + 6.3 * tbzzcsyl / 100 + 0.761 * jyhdcsdxjllje / capital_stock
-        + 1.295 * Math.log(gdzc)/Math.LN10  + 0.412 * (yysr_current / yysr_before) + 0.015 * ((jlr - fhje) / jlr) + 0.105 * (fzhj / (capital_stock * stock_price))
+        + 1.295 * Math.log(gdzc) / Math.LN10 + 0.412 * (yysr_current / yysr_before) + 0.015 * ((jlr - fhje) / jlr) + 0.105 * (fzhj / (capital_stock * stock_price))
         - 21.164 * (gdqyhj / capital_stock / stock_price)
-      let sql = "UPDATE `finance_data_calculate` SET zeta_score=? WHERE id = ?;"
-      param = [z_score, id]
+        let current_index = 0
       if (z_score) {
+        let fields_list = ['first_year','second_year','third_year','four_year','fifth_year','sixth_year','seventh_year','eighth_year','ninth_year','ten_year']
+        let put_sql = `INSERT INTO z_score_year (stock_type,${fields_list[current_index]}) VALUES (?,?);`
+        put_param = [resoults[i].stock_type, z_score]
+        if (stock_name == resoults[i + 1].stock_name) {
+          connection.query(put_sql, put_param, function (error, resoults, fields) {
+            if (error) throw error;
+            console.log(`>>> 插入${stock_name}第${current_index}年Z值成功${z_score}  <<<`)
+          })
+          current_index+=1
+        } else {
+          connection.query(put_sql, put_param, function (error, resoults, fields) {
+            if (error) throw error;
+            console.log(`>>> 插入${stock_name}第${current_index}年Z值成功${z_score}  <<<`)
+          })
+          current_index = 0
+        }
+        let sql = "UPDATE `finance_data_calculate` SET zeta_score=? WHERE id = ?;"
+        let param = [z_score, id]
         connection.query(sql, param, function (error, resoults, fields) {
           if (error) throw error;
           console.log(`>>>  计算${stock_name}${date}时的Z值成功${z_score}  <<<`)
