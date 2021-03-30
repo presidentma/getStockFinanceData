@@ -9,7 +9,7 @@ const { deepParseJson } = require('deep-parse-json')
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '1053654456',
+  password: '',
   database: 'test',
   charset: 'utf8'
 })
